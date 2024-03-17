@@ -1,270 +1,147 @@
-from layer import *
-
 import torch
 import torch.nn as nn
-from torch.nn import init
-from torch.optim import lr_scheduler
 
-# U-Net: Convolutional Networks for Biomedical Image Segmentation
-# https://arxiv.org/abs/1505.04597
-class UNet(nn.Module):
-    def __init__(self, nch_in, nch_out, nch_ker=64, norm='bnorm'):
-        super(UNet, self).__init__()
-
-        self.nch_in = nch_in
-        self.nch_out = nch_out
-        self.nch_ker = nch_ker
-        self.norm = norm
-
-        if norm == 'bnorm':
-            self.bias = False
-        else:
-            self.bias = True
-
-        """
-        Encoder part
-        """
-
-        self.enc1_1 = CNR2d(1 * self.nch_in,  1 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.enc1_2 = CNR2d(1 * self.nch_ker, 1 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.pool1 = Pooling2d(pool=2, type='avg')
-
-        self.enc2_1 = CNR2d(1 * self.nch_ker, 2 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.enc2_2 = CNR2d(2 * self.nch_ker, 2 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.pool2 = Pooling2d(pool=2, type='avg')
-
-        self.enc3_1 = CNR2d(2 * self.nch_ker, 4 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.enc3_2 = CNR2d(4 * self.nch_ker, 4 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.pool3 = Pooling2d(pool=2, type='avg')
-
-        self.enc4_1 = CNR2d(4 * self.nch_ker, 8 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.enc4_2 = CNR2d(8 * self.nch_ker, 8 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.pool4 = Pooling2d(pool=2, type='avg')
-
-        self.enc5_1 = CNR2d(8 * self.nch_ker, 2 * 8 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        """
-        Decoder part
-        """
-
-        self.dec5_1 = DECNR2d(2 * 8 * self.nch_ker, 8 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.unpool4 = UnPooling2d(pool=2, type='nearest')
-
-        self.dec4_2 = DECNR2d(2 * 8 * self.nch_ker, 8 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.dec4_1 = DECNR2d(8 * self.nch_ker,     4 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.unpool3 = UnPooling2d(pool=2, type='nearest')
-
-        self.dec3_2 = DECNR2d(2 * 4 * self.nch_ker, 4 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.dec3_1 = DECNR2d(4 * self.nch_ker,     2 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.unpool2 = UnPooling2d(pool=2, type='nearest')
-
-        self.dec2_2 = DECNR2d(2 * 2 * self.nch_ker, 2 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.dec2_1 = DECNR2d(2 * self.nch_ker,     1 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-
-        self.unpool1 = UnPooling2d(pool=2, type='nearest')
-
-        self.dec1_2 = DECNR2d(2 * 1 * self.nch_ker, 1 * self.nch_ker, kernel_size=3, stride=1, norm=self.norm, relu=0.0, drop=[])
-        self.dec1_1 = DECNR2d(1 * self.nch_ker,     1 * self.nch_out, kernel_size=3, stride=1, norm=[],        relu=[],  drop=[], bias=False)
+class CvBlock(nn.Module):
+    '''(Conv2d => BN => ReLU) x 2'''
+    def __init__(self, in_ch, out_ch):
+        super(CvBlock, self).__init__()
+        self.convblock = nn.Sequential(
+            nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_ch, out_ch, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True)
+        )
 
     def forward(self, x):
+        return self.convblock(x)
 
-        """
-        Encoder part
-        """
-
-        enc1 = self.enc1_2(self.enc1_1(x))
-        pool1 = self.pool1(enc1)
-
-        enc2 = self.enc2_2(self.enc2_1(pool1))
-        pool2 = self.pool2(enc2)
-
-        enc3 = self.enc3_2(self.enc3_1(pool2))
-        pool3 = self.pool3(enc3)
-
-        enc4 = self.enc4_2(self.enc4_1(pool3))
-        pool4 = self.pool4(enc4)
-
-        enc5 = self.enc5_1(pool4)
-
-        """
-        Encoder part
-        """
-        dec5 = self.dec5_1(enc5)
-
-        unpool4 = self.unpool4(dec5)
-        cat4 = torch.cat([enc4, unpool4], dim=1)
-        dec4 = self.dec4_1(self.dec4_2(cat4))
-
-        unpool3 = self.unpool3(dec4)
-        cat3 = torch.cat([enc3, unpool3], dim=1)
-        dec3 = self.dec3_1(self.dec3_2(cat3))
-
-        unpool2 = self.unpool2(dec3)
-        cat2 = torch.cat([enc2, unpool2], dim=1)
-        dec2 = self.dec2_1(self.dec2_2(cat2))
-
-        unpool1 = self.unpool1(dec2)
-        cat1 = torch.cat([enc1, unpool1], dim=1)
-        dec1 = torch.sigmoid(self.dec1_1(self.dec1_2(cat1)))
-
-        x = dec1
-
-        return x
-
-# Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network
-# https://arxiv.org/abs/1609.04802
-class ResNet(nn.Module):
-    def __init__(self, nch_in, nch_out, nch_ker=64, norm='bnorm', nblk=16):
-        super(ResNet, self).__init__()
-
-        self.nch_in = nch_in
-        self.nch_out = nch_out
-        self.nch_ker = nch_ker
-        self.norm = norm
-        self.nblk = nblk
-
-        if norm == 'bnorm':
-            self.bias = False
-        else:
-            self.bias = True
-
-        self.enc1 = CNR2d(self.nch_in, self.nch_ker, kernel_size=3, stride=1, padding=1, norm=[], relu=0.0)
-
-        res = []
-        for i in range(self.nblk):
-            res += [ResBlock(self.nch_ker, self.nch_ker, kernel_size=3, stride=1, padding=1, norm=self.norm, relu=0.0, padding_mode='reflection')]
-        self.res = nn.Sequential(*res)
-
-        self.dec1 = CNR2d(self.nch_ker, self.nch_ker, kernel_size=3, stride=1, padding=1, norm=norm, relu=[])
-
-        self.conv1 = Conv2d(self.nch_ker, self.nch_out, kernel_size=3, stride=1, padding=1)
+class InputCvBlock(nn.Module):
+    '''Adjusted to take grayscale images (single channel) as input'''
+    def __init__(self, num_in_frames, out_ch):
+        super(InputCvBlock, self).__init__()
+        self.interm_ch = 30
+        self.convblock = nn.Sequential(
+            nn.Conv2d(num_in_frames, num_in_frames*self.interm_ch, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(num_in_frames*self.interm_ch),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(num_in_frames*self.interm_ch, out_ch, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True)
+        )
 
     def forward(self, x):
-        x = self.enc1(x)
-        x0 = x
+        return self.convblock(x)
 
-        x = self.res(x)
-
-        x = self.dec1(x)
-        x = x + x0
-
-        x = self.conv1(x)
-
-        return x
-
-
-class Discriminator(nn.Module):
-    def __init__(self, nch_in, nch_ker=64, norm='bnorm'):
-        super(Discriminator, self).__init__()
-
-        self.nch_in = nch_in
-        self.nch_ker = nch_ker
-        self.norm = norm
-
-        if norm == 'bnorm':
-            self.bias = False
-        else:
-            self.bias = True
-
-        # dsc1 : 256 x 256 x 3 -> 128 x 128 x 64
-        # dsc2 : 128 x 128 x 64 -> 64 x 64 x 128
-        # dsc3 : 64 x 64 x 128 -> 32 x 32 x 256
-        # dsc4 : 32 x 32 x 256 -> 16 x 16 x 512
-        # dsc5 : 16 x 16 x 512 -> 16 x 16 x 1
-
-        self.dsc1 = CNR2d(1 * self.nch_in,  1 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=self.norm, relu=0.2)
-        self.dsc2 = CNR2d(1 * self.nch_ker, 2 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=self.norm, relu=0.2)
-        self.dsc3 = CNR2d(2 * self.nch_ker, 4 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=self.norm, relu=0.2)
-        self.dsc4 = CNR2d(4 * self.nch_ker, 8 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=self.norm, relu=0.2)
-        self.dsc5 = CNR2d(8 * self.nch_ker, 1,                kernel_size=4, stride=1, padding=1, norm=[],        relu=[], bias=False)
-
-        # self.dsc1 = CNR2d(1 * self.nch_in,  1 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=[], relu=0.2)
-        # self.dsc2 = CNR2d(1 * self.nch_ker, 2 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=[], relu=0.2)
-        # self.dsc3 = CNR2d(2 * self.nch_ker, 4 * self.nch_ker, kernel_size=4, stride=2, padding=1, norm=[], relu=0.2)
-        # self.dsc4 = CNR2d(4 * self.nch_ker, 8 * self.nch_ker, kernel_size=4, stride=1, padding=1, norm=[], relu=0.2)
-        # self.dsc5 = CNR2d(8 * self.nch_ker, 1,                kernel_size=4, stride=1, padding=1, norm=[], relu=[], bias=False)
+class DownBlock(nn.Module):
+    '''Pooling => (Conv2d => BN => ReLU)*2'''
+    def __init__(self, in_ch, out_ch):
+        super(DownBlock, self).__init__()
+        self.convblock = nn.Sequential(
+            nn.MaxPool2d(kernel_size=2, stride=2),  # Replacing stride conv with pooling
+            CvBlock(in_ch, out_ch)
+        )
 
     def forward(self, x):
+        return self.convblock(x)
 
-        x = self.dsc1(x)
-        x = self.dsc2(x)
-        x = self.dsc3(x)
-        x = self.dsc4(x)
-        x = self.dsc5(x)
+class UpBlock(nn.Module):
+	'''(Conv2d => BN => ReLU)*2 + Upscale'''
+	def __init__(self, in_ch, out_ch):
+		super(UpBlock, self).__init__()
+		self.convblock = nn.Sequential(
+			CvBlock(in_ch, in_ch),
+			nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
+            nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True)
+		)
 
-        # x = torch.sigmoid(x)
+	def forward(self, x):
+		return self.convblock(x)
 
+class OutputCvBlock(nn.Module):
+	'''Conv2d => BN => ReLU => Conv2d'''
+	def __init__(self, in_ch, out_ch):
+		super(OutputCvBlock, self).__init__()
+		self.convblock = nn.Sequential(
+			nn.Conv2d(in_ch, in_ch, kernel_size=3, padding=1, bias=False),
+			nn.BatchNorm2d(in_ch),
+			nn.ReLU(inplace=True),
+			nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False)
+		)
+
+	def forward(self, x):
+		return self.convblock(x)
+
+class DenBlock(nn.Module):
+    """Modified DenBlock to accept 2 input frames for the FastDVDnet model."""
+    def __init__(self):
+        super(DenBlock, self).__init__()
+        self.chs_lyr0 = 32
+        self.chs_lyr1 = 64
+        self.chs_lyr2 = 128
+
+        # Adjusting InputCvBlock to accept 2 frames concatenated along the channel dimension
+        self.inc = InputCvBlock(num_in_frames=2, out_ch=self.chs_lyr0)
+        self.downc0 = DownBlock(in_ch=self.chs_lyr0, out_ch=self.chs_lyr1)
+        self.downc1 = DownBlock(in_ch=self.chs_lyr1, out_ch=self.chs_lyr2)
+        self.upc2 = UpBlock(in_ch=self.chs_lyr2, out_ch=self.chs_lyr1)
+        self.upc1 = UpBlock(in_ch=self.chs_lyr1, out_ch=self.chs_lyr0)
+        self.outc = OutputCvBlock(in_ch=self.chs_lyr0, out_ch=1)  # Adjusting for grayscale output
+
+        self.reset_params()
+
+    def reset_params(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
+
+    def forward(self, frames):
+        # frames is expected to be a tensor of shape [N, 2, H, W], where N is the batch size
+        x0 = self.inc(frames)  # frames already concatenated
+        x1 = self.downc0(x0)
+        x2 = self.downc1(x1)
+        x2 = self.upc2(x2)
+        x1 = self.upc1(x1 + x2)
+        x = self.outc(x0 + x1)
         return x
 
-def init_weights(net, init_type='normal', init_gain=0.02):
-    """Initialize network weights.
+class FastDVDnet(nn.Module):
+    """Modified FastDVDnet model to process 4 grayscale input frames."""
+    def __init__(self):
+        super(FastDVDnet, self).__init__()
+        # Using the same DenBlock for frames 0 and 2, and 1 and 3, with shared weights.
+        self.shared_den_block = DenBlock()
+        # Another DenBlock to process the outputs of the first DenBlocks.
+        self.final_den_block = DenBlock()
+        # Init weights
+        self.reset_params()
 
-    Parameters:
-        net (nn.Module) -- network to be initialized
-        init_type (str) -- the name of an initialization method: normal, xavier, kaiming, orthogonal
-        init_gain (float) -- scaling factor for normal, xavier, and orthogonal.
+    @staticmethod
+    def weight_init(m):
+        if isinstance(m, nn.Conv2d):
+            nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
 
-    'normal' is used in the original pix2pix and CycleGAN paper. 
-    'kaiming' is recommended for networks with ReLU activation, which is also known as He initialization.
-    """
-    def init_func(m):
-        """Define the initialization function."""
-        classname = m.__class__.__name__
-        if hasattr(m, 'weight') and (classname.find('Conv') != -1 or classname.find('Linear') != -1):
-            if init_type == 'normal':
-                init.normal_(m.weight.data, mean=0.0, std=init_gain)
-            elif init_type == 'xavier':
-                init.xavier_normal_(m.weight.data, gain=init_gain)
-            elif init_type == 'kaiming':
-                # He initialization, also known as Kaiming initialization.
-                # 'a' parameter is the negative slope of the rectifier used after this layer (only used with 'leaky_relu')
-                init.kaiming_normal_(m.weight.data, a=0, mode='fan_in', nonlinearity='relu')
-            elif init_type == 'orthogonal':
-                init.orthogonal_(m.weight.data, gain=init_gain)
-            else:
-                raise ValueError(f"Initialization method '{init_type}' is not implemented.")
-            
-            if hasattr(m, 'bias') and m.bias is not None:
-                init.constant_(m.bias.data, 0.0)
-        elif classname.find('BatchNorm2d') != -1:
-            # BatchNorm Layer's weight is not a matrix; only normal distribution applies.
-            init.normal_(m.weight.data, 1.0, init_gain)
-            init.constant_(m.bias.data, 0.0)
+    def reset_params(self):
+        for _, m in enumerate(self.modules()):
+            self.weight_init(m)
 
-    print(f'initialize network with {init_type}')
-    net.apply(init_func)  # Apply the initialization function <init_func>
+    def forward(self, x):
+        x0, x1, x2, x3 = [x[:, :, :, :, i] for i in range(4)]  # Adjust indexing if necessary
 
+        # Assuming x0, x1, x2, x3 are your grayscale frames with shape [N, 1, H, W]
+        # Concatenate frames for processing: frames 0 and 2, and frames 1 and 3
+        input_02 = torch.cat([x0, x2], dim=1)  # Now shape [N, 2, H, W]
+        input_13 = torch.cat([x1, x3], dim=1)  # Now shape [N, 2, H, W]
 
+        # Process through the shared DenBlocks
+        output_02 = self.shared_den_block(input_02)
+        output_13 = self.shared_den_block(input_13)
 
-def init_net(net, init_type='normal', init_gain=0.02, gpu_ids=[]):
-    """Initialize a network: 1. register CPU/GPU device (with multi-GPU support); 2. initialize the network weights
-    Parameters:
-        net (network)      -- the network to be initialized
-        init_type (str)    -- the name of an initialization method: normal | xavier | kaiming | orthogonal
-        gain (float)       -- scaling factor for normal, xavier and orthogonal.
-        gpu_ids (int list) -- which GPUs the network runs on: e.g., 0,1,2
+        # Process the outputs through the final DenBlock
+        final_input = torch.cat([output_02, output_13], dim=1)
+        final_output = self.final_den_block(final_input)
 
-    Return an initialized network.
-    """
-    if gpu_ids:
-        assert(torch.cuda.is_available())
-        net.to(gpu_ids[0])
-        net = torch.nn.DataParallel(net, gpu_ids)  # multi-GPUs
-    else:
-        # check if we have  a gpu
-        if torch.cuda.is_available():
-            net.to(torch.device("cuda:0"))
-        else:
-            net.to(torch.device("cpu"))
-            
-    init_weights(net, init_type, init_gain=init_gain)
-    
-    return net
-
+        return torch.sigmoid(final_output)

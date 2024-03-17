@@ -77,19 +77,19 @@ class Trainer:
         print(f"Execution time: {execution_time} seconds")
 
         transform_train = transforms.Compose([
-            MinMaxNormalize(min, max),
-            RandomCrop(output_size=(64,64)),
-            ToTensor()
+            MinMaxNormalizeVideo(min, max),
+            RandomCropVideo(output_size=(64,64)),
+            ToTensorVideo()
         ])
 
         transform_inv_train = transforms.Compose([
-            ToNumpy()
+            ToNumpyVideo()
         ])
 
 
         ### make dataset and loader ###
 
-        dataset_train = N2NSliceDataset2(root_folder_path=self.data_dir, 
+        dataset_train = N2NVideoDataset(root_folder_path=self.data_dir,
                                     transform=transform_train)
 
         loader_train = torch.utils.data.DataLoader(
@@ -104,90 +104,73 @@ class Trainer:
 
         ### initialize network ###
 
-        net = UNet(nch_in = 1,
-                   nch_out = 1
-                   ).to(self.device)
+        model = FastDVDnet()
 
-        # init_weights(net, init_type='kaiming', init_gain=1e-20)
-        init_weights(net, init_type='normal', init_gain=0.02)
+        criterion = nn.MSELoss(reduction='sum')
 
-        N2N_loss = nn.L1Loss().to(self.device).to(self.device)
-
-        params = net.parameters()
-
-        optimG = torch.optim.Adam(params, lr=1e-3, betas=(0.5, 0.999))
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
         st_epoch = 0
         if self.train_continue == 'on':
             print(self.checkpoints_dir)
-            net, optimG, st_epoch = self.load(self.checkpoints_dir, net, self.load_epoch, optimG)
-
+            model, optimizer, st_epoch = self.load(self.checkpoints_dir, model, self.load_epoch, optimizer)
 
         for epoch in range(st_epoch + 1, self.num_epoch + 1):
 
-            net.train()  # Set the network to training mode
+            for batch, data in enumerate(loader_train, 0):
 
-            loss_train = []  # Initialize a list to store losses for each batch
-
-            for batch, data in enumerate(loader_train, 1):
-                
                 def should(freq):
                     return freq > 0 and (batch % freq == 0 or batch == num_batch_train)
 
-                # Assuming 'data' is a tuple of (input_batch, target_batch)
-                # and each element in 'data' has a shape of [1, 8, 1, 64, 64] due to batch_size=1 in DataLoader
-                # Squeeze the unnecessary outer batch dimension
+                # Pre-training step
+                model.train()
+
+                # When optimizer = optim.Optimizer(net.parameters()) we only zero the optim's grads
+                optimizer.zero_grad()
+
                 input_img, target_img = [x.squeeze(0).to(self.device) for x in data]
 
-                # Forward pass: compute the network output on input_img
-                output_img = net(input_img)
+                output_img = model(input_img)
 
-                # Reset gradients for the current batch
-                optimG.zero_grad()
-
-                # Compute loss using the output from the network and the target_img
-                loss = N2N_loss(output_img, target_img)
-
-                # Backward pass: compute gradient of the loss with respect to model parameters
+                loss = criterion(output_img, target_img)
                 loss.backward()
-
-                # Perform a single optimization step (parameter update)
-                optimG.step()
-
-                # Store the loss for this batch
-                loss_train.append(loss.item())  # .item() converts a single-element tensor to a scalar
-
+                optimizer.step()
 
                 logging.info('TRAIN: EPOCH %d: BATCH %04d/%04d: LOSS: %.4f'
-                             % (epoch, batch, num_batch_train, np.mean(loss_train)))
-
+                             % (epoch, batch, num_batch_train, loss))
                 
+
                 if should(self.num_freq_disp):
+                    # Assuming input_img is a tensor with shape [batch_size, num_frames, H, W]
+                    num_frames = input_img.shape[-1]  # Assuming the second dimension represents the number of frames
 
-                    input_img = transform_inv_train(input_img)[..., 0]
-                    target_img = transform_inv_train(target_img)[..., 0]
-                    output_img = transform_inv_train(output_img)[..., 0]
+                    # Convert tensors to numpy arrays
+                    input_img_np = transform_inv_train(input_img)
+                    target_img_np = transform_inv_train(target_img)
+                    output_img_np = transform_inv_train(output_img)
 
-                    # plot_intensity_distribution(input_img)
-                    # plot_intensity_distribution(target_img)
-                    # plot_intensity_distribution(output_img)
+                    for j in range(target_img_np.shape[0]):  # Iterate through each item in the batch
+                        # Define a base filename that includes epoch, batch, and sample index
+                        base_filename = f"sample{j:03d}"
 
-                    # input_img = np.clip(input_img, 0, 1)
-                    # target_img = np.clip(target_img, 0, 1)
-                    # output_img = np.clip(output_img, 0, 1)
+                        # Save each input frame
+                        for frame_idx in range(num_frames):
+                            input_frame_filename = os.path.join(self.train_results_dir, f"{base_filename}_input_frame{frame_idx}.png")
+                            plt.imsave(input_frame_filename, input_img_np[j, :, :, 0, frame_idx], cmap='gray')
 
-                    for j in range(target_img.shape[0]):
+                        # Save the target and output images
+                        target_filename = os.path.join(self.train_results_dir, f"{base_filename}_target.png")
+                        output_filename = os.path.join(self.train_results_dir, f"{base_filename}_output.png")
 
-                        name = num_batch_train * (batch - 1) + j
-                        fileset = {'name': name,
-                                   'input': "%04d-%04d-input.png" % (batch, j),
-                                   'output': "%04d-%04d-output.png" % (batch, j),
-                                   'target': "%04d-%04d-label.png" % (batch, j)}
+                        plt.imsave(target_filename, target_img_np[j, :, :, 0], cmap='gray')
+                        plt.imsave(output_filename, output_img_np[j, :, :, 0], cmap='gray')
 
+                        # Optionally, print or log the file paths to verify
+                        # print(f"Saved input frames to: {input_frame_filename}")
+                        # print(f"Saved target to: {target_filename}")
+                        # print(f"Saved output to: {output_filename}")
 
-                        plt.imsave(os.path.join(self.train_results_dir, fileset['input']), input_img[j, :, :], cmap='gray')
-                        plt.imsave(os.path.join(self.train_results_dir, fileset['output']), output_img[j, :, :], cmap='gray')
-                        plt.imsave(os.path.join(self.train_results_dir, fileset['target']), target_img[j, :, :], cmap='gray')
-            
             if (epoch % self.num_freq_save) == 0:
-                self.save(self.checkpoints_dir, net, optimG, epoch)
+                self.save(self.checkpoints_dir, model, optimizer, epoch)
+
+               

@@ -41,7 +41,7 @@ sys.stderr = StreamToLogger(logging.getLogger('STDERR'), logging.ERROR)
 
 
 from utils import *
-from new_train import *
+from train import *
 
 
 def main():
@@ -63,18 +63,13 @@ def main():
     else:
         # If not running on the server, perhaps use a default data_dir or handle differently
         data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample-unidentified')
+        project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'FastDVDNet')
+        name = 'test-2'
         print(f"Not running on server, using default data directory: {data_dir}")
 
 
 
     ### things to modify depending on your folder structure
-
-    local_project_path = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'OCM_denoising-FastDVDNet')
-    remote_project_path = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'OCM_denoising-FastDVDNet')
-    project_dir = get_file_path(local_path=local_project_path, remote_path=remote_project_path)
-
-
-    name = 'test-2'
 
     results_dir, checkpoints_dir = create_result_dir(project_dir, name)
 

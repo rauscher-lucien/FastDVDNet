@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 def create_result_dir(project_dir, name='new_results'):
 
+    os.makedirs(project_dir, exist_ok=True)
     results_dir = os.path.join(project_dir, name, 'results')
     os.makedirs(results_dir, exist_ok=True)
     checkpoints_dir = os.path.join(project_dir, name, 'checkpoints')
