@@ -63,9 +63,10 @@ def main():
     else:
         # If not running on the server, perhaps use a default data_dir or handle differently
         data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample-unidentified')
-        project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'FastDVDNet')
+        project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
         name = 'test-2'
-        print(f"Not running on server, using default data directory: {data_dir}")
+        train_continue = 'off'
+        load_epoch = 102
 
 
 
@@ -85,8 +86,8 @@ def main():
     data_dict['num_freq_disp'] = 5
     data_dict['num_freq_save'] = 1
 
-    data_dict['train_continue'] = 'off' 
-    data_dict['load_epoch'] = 30
+    data_dict['train_continue'] = train_continue
+    data_dict['load_epoch'] = load_epoch
 
 
     TRAINER = Trainer(data_dict)

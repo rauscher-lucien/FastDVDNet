@@ -390,3 +390,189 @@
 2024-03-17 16:03:50 - INFO - TRAIN: EPOCH 5: BATCH 0001/0032: LOSS: 108.2011
 2024-03-17 16:03:51 - INFO - TRAIN: EPOCH 5: BATCH 0002/0032: LOSS: 123.1604
 2024-03-17 16:03:52 - INFO - Backend TkAgg is interactive backend. Turning interactive mode on.
+2024-03-17 16:26:18 - INFO - GPU is not available
+2024-03-17 16:26:18 - INFO - C:\Users\rausc\Documents\EMBL\data\big_data_small\good_sample-unidentified
+2024-03-17 16:26:18 - INFO - Global min and max parameters saved to C:\Users\rausc\Documents\EMBL\data\big_data_small\good_sample-unidentified\min_max_params.pkl
+2024-03-17 16:26:18 - INFO - Execution time: 0.009999990463256836 seconds
+2024-03-17 16:26:27 - INFO - TRAIN: EPOCH 1: BATCH 0000/0032: LOSS: 1432.7734
+2024-03-17 16:26:27 - INFO - TRAIN: EPOCH 1: BATCH 0001/0032: LOSS: 883.9034
+2024-03-17 16:26:28 - INFO - TRAIN: EPOCH 1: BATCH 0002/0032: LOSS: 555.9512
+2024-03-17 16:26:28 - INFO - TRAIN: EPOCH 1: BATCH 0003/0032: LOSS: 391.4780
+2024-03-17 16:26:28 - INFO - TRAIN: EPOCH 1: BATCH 0004/0032: LOSS: 586.7738
+2024-03-17 16:26:29 - INFO - TRAIN: EPOCH 1: BATCH 0005/0032: LOSS: 236.6634
+2024-03-17 16:26:29 - INFO - TRAIN: EPOCH 1: BATCH 0006/0032: LOSS: 302.6083
+2024-03-17 16:26:30 - INFO - TRAIN: EPOCH 1: BATCH 0007/0032: LOSS: 250.2561
+2024-03-17 16:26:30 - INFO - TRAIN: EPOCH 1: BATCH 0008/0032: LOSS: 188.4617
+2024-03-17 16:26:30 - INFO - TRAIN: EPOCH 1: BATCH 0009/0032: LOSS: 206.7906
+2024-03-17 16:26:31 - INFO - TRAIN: EPOCH 1: BATCH 0010/0032: LOSS: 319.9968
+2024-03-17 16:26:31 - INFO - TRAIN: EPOCH 1: BATCH 0011/0032: LOSS: 208.6649
+2024-03-17 16:26:32 - INFO - TRAIN: EPOCH 1: BATCH 0012/0032: LOSS: 315.6260
+2024-03-17 16:26:32 - INFO - TRAIN: EPOCH 1: BATCH 0013/0032: LOSS: 200.9828
+2024-03-17 16:26:32 - INFO - TRAIN: EPOCH 1: BATCH 0014/0032: LOSS: 148.0803
+2024-03-17 16:26:33 - INFO - TRAIN: EPOCH 1: BATCH 0015/0032: LOSS: 177.9320
+2024-03-17 16:26:33 - INFO - TRAIN: EPOCH 1: BATCH 0016/0032: LOSS: 227.6661
+2024-03-17 16:26:34 - INFO - TRAIN: EPOCH 1: BATCH 0017/0032: LOSS: 143.6112
+2024-03-17 16:26:34 - INFO - TRAIN: EPOCH 1: BATCH 0018/0032: LOSS: 246.9964
+2024-03-17 16:26:34 - INFO - TRAIN: EPOCH 1: BATCH 0019/0032: LOSS: 144.0765
+2024-03-17 16:26:35 - INFO - TRAIN: EPOCH 1: BATCH 0020/0032: LOSS: 194.2656
+2024-03-17 16:26:35 - INFO - TRAIN: EPOCH 1: BATCH 0021/0032: LOSS: 185.7669
+2024-03-17 16:26:36 - INFO - TRAIN: EPOCH 1: BATCH 0022/0032: LOSS: 187.0984
+2024-03-17 16:26:36 - INFO - TRAIN: EPOCH 1: BATCH 0023/0032: LOSS: 127.4361
+2024-03-17 16:26:37 - INFO - TRAIN: EPOCH 1: BATCH 0024/0032: LOSS: 133.4275
+2024-03-17 16:26:37 - INFO - TRAIN: EPOCH 1: BATCH 0025/0032: LOSS: 201.0386
+2024-03-17 16:26:38 - INFO - TRAIN: EPOCH 1: BATCH 0026/0032: LOSS: 247.9713
+2024-03-17 16:26:38 - INFO - TRAIN: EPOCH 1: BATCH 0027/0032: LOSS: 148.9144
+2024-03-17 16:26:39 - INFO - TRAIN: EPOCH 1: BATCH 0028/0032: LOSS: 133.2852
+2024-03-17 16:26:39 - INFO - TRAIN: EPOCH 1: BATCH 0029/0032: LOSS: 160.2985
+2024-03-17 16:26:39 - INFO - TRAIN: EPOCH 1: BATCH 0030/0032: LOSS: 128.7294
+2024-03-17 16:26:40 - INFO - TRAIN: EPOCH 1: BATCH 0031/0032: LOSS: 71.7012
+2024-03-17 16:26:51 - INFO - TRAIN: EPOCH 2: BATCH 0000/0032: LOSS: 165.0083
+2024-03-17 16:26:52 - INFO - TRAIN: EPOCH 2: BATCH 0001/0032: LOSS: 138.1775
+2024-03-17 16:26:52 - INFO - TRAIN: EPOCH 2: BATCH 0002/0032: LOSS: 161.8879
+2024-03-17 16:26:52 - INFO - TRAIN: EPOCH 2: BATCH 0003/0032: LOSS: 154.4017
+2024-03-17 16:26:53 - INFO - TRAIN: EPOCH 2: BATCH 0004/0032: LOSS: 219.7011
+2024-03-17 16:26:53 - INFO - TRAIN: EPOCH 2: BATCH 0005/0032: LOSS: 135.0474
+2024-03-17 16:26:54 - INFO - TRAIN: EPOCH 2: BATCH 0006/0032: LOSS: 120.8147
+2024-03-17 16:26:54 - INFO - TRAIN: EPOCH 2: BATCH 0007/0032: LOSS: 159.6350
+2024-03-17 16:26:54 - INFO - TRAIN: EPOCH 2: BATCH 0008/0032: LOSS: 185.6485
+2024-03-17 16:26:55 - INFO - TRAIN: EPOCH 2: BATCH 0009/0032: LOSS: 169.5892
+2024-03-17 16:26:55 - INFO - TRAIN: EPOCH 2: BATCH 0010/0032: LOSS: 147.1997
+2024-03-17 16:26:56 - INFO - TRAIN: EPOCH 2: BATCH 0011/0032: LOSS: 234.8842
+2024-03-17 16:26:56 - INFO - TRAIN: EPOCH 2: BATCH 0012/0032: LOSS: 142.1995
+2024-03-17 16:26:56 - INFO - TRAIN: EPOCH 2: BATCH 0013/0032: LOSS: 219.0070
+2024-03-17 16:26:57 - INFO - TRAIN: EPOCH 2: BATCH 0014/0032: LOSS: 139.1681
+2024-03-17 16:26:57 - INFO - TRAIN: EPOCH 2: BATCH 0015/0032: LOSS: 191.8686
+2024-03-17 16:26:58 - INFO - TRAIN: EPOCH 2: BATCH 0016/0032: LOSS: 172.7980
+2024-03-17 16:26:58 - INFO - TRAIN: EPOCH 2: BATCH 0017/0032: LOSS: 153.6464
+2024-03-17 16:26:59 - INFO - TRAIN: EPOCH 2: BATCH 0018/0032: LOSS: 175.7648
+2024-03-17 16:26:59 - INFO - TRAIN: EPOCH 2: BATCH 0019/0032: LOSS: 137.1183
+2024-03-17 16:26:59 - INFO - TRAIN: EPOCH 2: BATCH 0020/0032: LOSS: 130.0618
+2024-03-17 16:27:00 - INFO - TRAIN: EPOCH 2: BATCH 0021/0032: LOSS: 118.6898
+2024-03-17 16:27:00 - INFO - TRAIN: EPOCH 2: BATCH 0022/0032: LOSS: 156.8334
+2024-03-17 16:27:01 - INFO - TRAIN: EPOCH 2: BATCH 0023/0032: LOSS: 577.1763
+2024-03-17 16:27:01 - INFO - TRAIN: EPOCH 2: BATCH 0024/0032: LOSS: 229.8450
+2024-03-17 16:27:02 - INFO - TRAIN: EPOCH 2: BATCH 0025/0032: LOSS: 139.3563
+2024-03-17 16:27:02 - INFO - TRAIN: EPOCH 2: BATCH 0026/0032: LOSS: 274.9979
+2024-03-17 16:27:03 - INFO - TRAIN: EPOCH 2: BATCH 0027/0032: LOSS: 183.5840
+2024-03-17 16:27:03 - INFO - TRAIN: EPOCH 2: BATCH 0028/0032: LOSS: 218.0134
+2024-03-17 16:27:03 - INFO - TRAIN: EPOCH 2: BATCH 0029/0032: LOSS: 127.2082
+2024-03-17 16:27:05 - ERROR - Traceback (most recent call last):
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 196, in _run_module_as_main
+2024-03-17 16:27:05 - ERROR - return _run_code(code, main_globals, None,
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 86, in _run_code
+2024-03-17 16:27:05 - ERROR - exec(code, run_globals)
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\__main__.py", line 39, in <module>
+2024-03-17 16:27:05 - ERROR - cli.main()
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 430, in main
+2024-03-17 16:27:05 - ERROR - run()
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+2024-03-17 16:27:05 - ERROR - runpy.run_path(target, run_name="__main__")
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+2024-03-17 16:27:05 - ERROR - return _run_module_code(code, init_globals, run_name,
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+2024-03-17 16:27:05 - ERROR - _run_code(code, mod_globals, init_globals,
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+2024-03-17 16:27:05 - ERROR - exec(code, run_globals)
+2024-03-17 16:27:05 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 98, in <module>
+2024-03-17 16:27:05 - ERROR - main()
+2024-03-17 16:27:05 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 94, in main
+2024-03-17 16:27:05 - ERROR - TRAINER.train()
+2024-03-17 16:27:05 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\train.py", line 136, in train
+2024-03-17 16:27:05 - ERROR - loss.backward()
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\_tensor.py", line 492, in backward
+2024-03-17 16:27:05 - ERROR - torch.autograd.backward(
+2024-03-17 16:27:05 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\__init__.py", line 251, in backward
+2024-03-17 16:27:05 - ERROR - Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+2024-03-17 16:27:05 - ERROR - KeyboardInterrupt
+2024-03-17 16:27:55 - INFO - GPU is not available
+2024-03-17 16:27:55 - INFO - C:\Users\rausc\Documents\EMBL\data\big_data_small\good_sample-unidentified
+2024-03-17 16:27:55 - INFO - Global min and max parameters saved to C:\Users\rausc\Documents\EMBL\data\big_data_small\good_sample-unidentified\min_max_params.pkl
+2024-03-17 16:27:55 - INFO - Execution time: 0.02043938636779785 seconds
+2024-03-17 16:28:04 - INFO - TRAIN: EPOCH 1: BATCH 0000/0032: LOSS: 1524.9169
+2024-03-17 16:28:05 - INFO - TRAIN: EPOCH 1: BATCH 0001/0032: LOSS: 1303.8868
+2024-03-17 16:28:05 - INFO - TRAIN: EPOCH 1: BATCH 0002/0032: LOSS: 773.6570
+2024-03-17 16:28:06 - INFO - TRAIN: EPOCH 1: BATCH 0003/0032: LOSS: 493.6254
+2024-03-17 16:28:06 - INFO - TRAIN: EPOCH 1: BATCH 0004/0032: LOSS: 469.8099
+2024-03-17 16:28:06 - INFO - TRAIN: EPOCH 1: BATCH 0005/0032: LOSS: 286.8378
+2024-03-17 16:28:07 - INFO - TRAIN: EPOCH 1: BATCH 0006/0032: LOSS: 285.1569
+2024-03-17 16:28:07 - INFO - TRAIN: EPOCH 1: BATCH 0007/0032: LOSS: 295.7842
+2024-03-17 16:28:08 - INFO - TRAIN: EPOCH 1: BATCH 0008/0032: LOSS: 359.5765
+2024-03-17 16:28:08 - INFO - TRAIN: EPOCH 1: BATCH 0009/0032: LOSS: 203.3684
+2024-03-17 16:28:09 - INFO - TRAIN: EPOCH 1: BATCH 0010/0032: LOSS: 205.4926
+2024-03-17 16:28:09 - INFO - TRAIN: EPOCH 1: BATCH 0011/0032: LOSS: 173.1196
+2024-03-17 16:28:09 - INFO - TRAIN: EPOCH 1: BATCH 0012/0032: LOSS: 259.2607
+2024-03-17 16:28:10 - INFO - TRAIN: EPOCH 1: BATCH 0013/0032: LOSS: 190.1312
+2024-03-17 16:28:10 - INFO - TRAIN: EPOCH 1: BATCH 0014/0032: LOSS: 164.6187
+2024-03-17 16:28:11 - INFO - TRAIN: EPOCH 1: BATCH 0015/0032: LOSS: 210.0123
+2024-03-17 16:28:11 - INFO - TRAIN: EPOCH 1: BATCH 0016/0032: LOSS: 159.1301
+2024-03-17 16:28:12 - INFO - TRAIN: EPOCH 1: BATCH 0017/0032: LOSS: 145.6755
+2024-03-17 16:28:12 - INFO - TRAIN: EPOCH 1: BATCH 0018/0032: LOSS: 129.2038
+2024-03-17 16:28:13 - INFO - TRAIN: EPOCH 1: BATCH 0019/0032: LOSS: 143.4740
+2024-03-17 16:28:14 - INFO - TRAIN: EPOCH 1: BATCH 0020/0032: LOSS: 186.5913
+2024-03-17 16:28:15 - INFO - TRAIN: EPOCH 1: BATCH 0021/0032: LOSS: 184.3455
+2024-03-17 16:28:15 - INFO - TRAIN: EPOCH 1: BATCH 0022/0032: LOSS: 189.5763
+2024-03-17 16:28:16 - INFO - TRAIN: EPOCH 1: BATCH 0023/0032: LOSS: 186.8598
+2024-03-17 16:28:17 - INFO - TRAIN: EPOCH 1: BATCH 0024/0032: LOSS: 175.2026
+2024-03-17 16:28:17 - INFO - TRAIN: EPOCH 1: BATCH 0025/0032: LOSS: 169.9144
+2024-03-17 16:28:18 - INFO - TRAIN: EPOCH 1: BATCH 0026/0032: LOSS: 140.9598
+2024-03-17 16:28:19 - INFO - TRAIN: EPOCH 1: BATCH 0027/0032: LOSS: 131.5709
+2024-03-17 16:28:19 - INFO - TRAIN: EPOCH 1: BATCH 0028/0032: LOSS: 127.4626
+2024-03-17 16:28:20 - INFO - TRAIN: EPOCH 1: BATCH 0029/0032: LOSS: 147.5513
+2024-03-17 16:28:21 - INFO - TRAIN: EPOCH 1: BATCH 0030/0032: LOSS: 168.8289
+2024-03-17 16:28:22 - INFO - TRAIN: EPOCH 1: BATCH 0031/0032: LOSS: 88.3940
+2024-03-17 16:28:22 - ERROR - Traceback (most recent call last):
+2024-03-17 16:28:22 - ERROR -   File "<string>", line 1, in <module>
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\spawn.py", line 116, in spawn_main
+2024-03-17 16:28:22 - ERROR - exitcode = _main(fd, parent_sentinel)
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\spawn.py", line 129, in _main
+2024-03-17 16:28:22 - ERROR - return self._bootstrap(parent_sentinel)
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 332, in _bootstrap
+2024-03-17 16:28:22 - ERROR - threading._shutdown()
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1567, in _shutdown
+2024-03-17 16:28:22 - ERROR - lock.acquire()
+2024-03-17 16:28:22 - ERROR - KeyboardInterrupt
+2024-03-17 16:28:22 - ERROR - Traceback (most recent call last):
+2024-03-17 16:28:22 - ERROR -   File "<string>", line 1, in <module>
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\spawn.py", line 116, in spawn_main
+2024-03-17 16:28:22 - ERROR - exitcode = _main(fd, parent_sentinel)
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\spawn.py", line 129, in _main
+2024-03-17 16:28:22 - ERROR - return self._bootstrap(parent_sentinel)
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 332, in _bootstrap
+2024-03-17 16:28:22 - ERROR - threading._shutdown()
+2024-03-17 16:28:22 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1567, in _shutdown
+2024-03-17 16:28:22 - ERROR - lock.acquire()
+2024-03-17 16:28:22 - ERROR - KeyboardInterrupt
+2024-03-17 16:28:23 - ERROR - Traceback (most recent call last):
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 196, in _run_module_as_main
+2024-03-17 16:28:23 - ERROR - return _run_code(code, main_globals, None,
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 86, in _run_code
+2024-03-17 16:28:23 - ERROR - exec(code, run_globals)
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\__main__.py", line 39, in <module>
+2024-03-17 16:28:23 - ERROR - cli.main()
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 430, in main
+2024-03-17 16:28:23 - ERROR - run()
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+2024-03-17 16:28:23 - ERROR - runpy.run_path(target, run_name="__main__")
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+2024-03-17 16:28:23 - ERROR - return _run_module_code(code, init_globals, run_name,
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+2024-03-17 16:28:23 - ERROR - _run_code(code, mod_globals, init_globals,
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+2024-03-17 16:28:23 - ERROR - exec(code, run_globals)
+2024-03-17 16:28:23 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 98, in <module>
+2024-03-17 16:28:23 - ERROR - main()
+2024-03-17 16:28:23 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 94, in main
+2024-03-17 16:28:23 - ERROR - TRAINER.train()
+2024-03-17 16:28:23 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\train.py", line 120, in train
+2024-03-17 16:28:23 - ERROR - for batch, data in enumerate(loader_train, 0):
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\utils\data\dataloader.py", line 630, in __next__
+2024-03-17 16:28:23 - ERROR - data = self._next_data()
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\utils\data\dataloader.py", line 1317, in _next_data
+2024-03-17 16:28:23 - ERROR - self._shutdown_workers()
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\utils\data\dataloader.py", line 1442, in _shutdown_workers
+2024-03-17 16:28:23 - ERROR - w.join(timeout=_utils.MP_STATUS_CHECK_INTERVAL)
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 149, in join
+2024-03-17 16:28:23 - ERROR - res = self._popen.wait(timeout)
+2024-03-17 16:28:23 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\multiprocessing\popen_spawn_win32.py", line 108, in wait
+2024-03-17 16:28:23 - ERROR - res = _winapi.WaitForSingleObject(int(self._handle), msecs)
+2024-03-17 16:28:23 - ERROR - KeyboardInterrupt
