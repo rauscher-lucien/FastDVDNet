@@ -87,7 +87,7 @@ def main():
     data_dict['num_epoch'] = 300
     data_dict['batch_size'] = 8
 
-    data_dict['num_freq_disp'] = 1
+    data_dict['num_freq_disp'] = 5
     data_dict['num_freq_save'] = 1
 
     data_dict['train_continue'] = 'off' 
