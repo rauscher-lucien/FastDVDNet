@@ -28,6 +28,7 @@ class Trainer:
 
         self.num_epoch = data_dict['num_epoch']
         self.batch_size = data_dict['batch_size']
+        self.lr = data_dict['lr']
 
         self.num_freq_disp = data_dict['num_freq_disp']
         self.num_freq_save = data_dict['num_freq_save']
@@ -71,25 +72,29 @@ class Trainer:
 
         print(self.data_dir)
         start_time = time.time()
-        min, max = compute_global_min_max_and_save(self.data_dir)
+        mean, std = compute_global_mean_and_std(self.data_dir, self.checkpoints_dir)
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"Execution time: {execution_time} seconds")
 
         transform_train = transforms.Compose([
-            MinMaxNormalizeVideo(min, max),
+            Normalize(mean, std),
             RandomCropVideo(output_size=(64,64)),
             ToTensorVideo()
         ])
 
         transform_inv_train = transforms.Compose([
+            BackTo01Range(),
             ToNumpyVideo()
         ])
 
 
         ### make dataset and loader ###
 
-        dataset_train = N2NVideoDataset(root_folder_path=self.data_dir,
+        ## prepare dataset
+        crop_tiff_depth_to_divisible(self.data_dir, self.batch_size)
+
+        dataset_train = N2NVideoDataset2(root_folder_path=self.data_dir,
                                     transform=transform_train)
 
         loader_train = torch.utils.data.DataLoader(
@@ -108,7 +113,7 @@ class Trainer:
 
         criterion = nn.MSELoss(reduction='sum')
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(model.parameters(), self.lr)
 
         st_epoch = 0
         if self.train_continue == 'on':
@@ -130,7 +135,13 @@ class Trainer:
 
                 input_img, target_img = [x.squeeze(0).to(self.device) for x in data]
 
+                #plot_intensity_line_distribution(input_img, 'input')
+
+                #plot_intensity_line_distribution(target_img, 'target')
+
                 output_img = model(input_img)
+
+                #plot_intensity_line_distribution(output_img, 'output')
 
                 loss = criterion(output_img, target_img)
                 loss.backward()

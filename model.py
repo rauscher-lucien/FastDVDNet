@@ -39,7 +39,7 @@ class DownBlock(nn.Module):
     def __init__(self, in_ch, out_ch):
         super(DownBlock, self).__init__()
         self.convblock = nn.Sequential(
-            nn.MaxPool2d(kernel_size=2, stride=2),  # Replacing stride conv with pooling
+            nn.MaxPool2d(kernel_size=2, stride=2),
             CvBlock(in_ch, out_ch)
         )
 
@@ -52,10 +52,7 @@ class UpBlock(nn.Module):
 		super(UpBlock, self).__init__()
 		self.convblock = nn.Sequential(
 			CvBlock(in_ch, in_ch),
-			nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
-            nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(out_ch),
-            nn.ReLU(inplace=True)
+			nn.ConvTranspose2d(in_ch, out_ch, kernel_size=2, stride=2, padding=0)
 		)
 
 	def forward(self, x):
@@ -84,14 +81,15 @@ class DenBlock(nn.Module):
         self.chs_lyr2 = 128
 
         # Adjusting InputCvBlock to accept 2 frames concatenated along the channel dimension
-        self.inc = InputCvBlock(num_in_frames=2, out_ch=self.chs_lyr0)
+        self.inc = CvBlock(in_ch=2, out_ch=self.chs_lyr0)
         self.downc0 = DownBlock(in_ch=self.chs_lyr0, out_ch=self.chs_lyr1)
         self.downc1 = DownBlock(in_ch=self.chs_lyr1, out_ch=self.chs_lyr2)
         self.upc2 = UpBlock(in_ch=self.chs_lyr2, out_ch=self.chs_lyr1)
         self.upc1 = UpBlock(in_ch=self.chs_lyr1, out_ch=self.chs_lyr0)
-        self.outc = OutputCvBlock(in_ch=self.chs_lyr0, out_ch=1)  # Adjusting for grayscale output
+        self.outc = CvBlock(in_ch=self.chs_lyr0, out_ch=self.chs_lyr0)  # Adjusting for grayscale output
+        self.finalconv = nn.Conv2d(self.chs_lyr0, 1, kernel_size=3, padding=1, bias=False)
 
-        self.reset_params()
+        #self.reset_params()
 
     def reset_params(self):
         for m in self.modules():
@@ -106,6 +104,7 @@ class DenBlock(nn.Module):
         x2 = self.upc2(x2)
         x1 = self.upc1(x1 + x2)
         x = self.outc(x0 + x1)
+        x = self.finalconv(x)
         return x
 
 class FastDVDnet(nn.Module):
@@ -116,20 +115,9 @@ class FastDVDnet(nn.Module):
         self.shared_den_block = DenBlock()
         # Another DenBlock to process the outputs of the first DenBlocks.
         self.final_den_block = DenBlock()
-        # Init weights
-        self.reset_params()
-
-    @staticmethod
-    def weight_init(m):
-        if isinstance(m, nn.Conv2d):
-            nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
-
-    def reset_params(self):
-        for _, m in enumerate(self.modules()):
-            self.weight_init(m)
 
     def forward(self, x):
-        x0, x1, x2, x3 = [x[:, :, :, :, i] for i in range(4)]  # Adjust indexing if necessary
+        x0, x1, x2, x3 = [x[..., :, :, :, i] for i in range(4)]  # Adjust indexing if necessary
 
         # Assuming x0, x1, x2, x3 are your grayscale frames with shape [N, 1, H, W]
         # Concatenate frames for processing: frames 0 and 2, and frames 1 and 3
@@ -144,4 +132,4 @@ class FastDVDnet(nn.Module):
         final_input = torch.cat([output_02, output_13], dim=1)
         final_output = self.final_den_block(final_input)
 
-        return torch.sigmoid(final_output)
+        return final_output

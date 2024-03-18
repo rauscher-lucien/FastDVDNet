@@ -283,8 +283,65 @@ class N2NVideoDataset(torch.utils.data.Dataset):
 
         if self.transform:
             # Apply transform to both input stack and target slice
-            data = self.transform((input_stack, target_slice))
-            return data
+            input_stack, target_slice = self.transform((input_stack, target_slice))
+            return input_stack, target_slice
         else:
             return input_stack, target_slice
+        
+
+
+class N2NVideoDataset2(torch.utils.data.Dataset):
+    def __init__(self, root_folder_path, transform=None):
+        """
+        Initializes the dataset with the path to a folder and its subfolders containing TIFF stacks, 
+        and an optional transform to be applied to each input-target pair.
+
+        Parameters:
+        - root_folder_path: Path to the root folder containing TIFF stack files.
+        - transform: Optional transform to be applied to each input-target pair.
+        """
+        self.root_folder_path = root_folder_path
+        self.transform = transform
+        self.preloaded_data = {}  # To store preloaded data
+        self.pairs, self.cumulative_slices = self.preload_and_process_stacks()
+
+    def preload_and_process_stacks(self):
+        pairs = []
+        cumulative_slices = [0]
+        for subdir, _, files in os.walk(self.root_folder_path):
+            sorted_files = sorted([f for f in files if f.lower().endswith(('.tif', '.tiff'))])
+            for filename in sorted_files:
+                full_path = os.path.join(subdir, filename)
+                stack = tifffile.imread(full_path)
+                self.preloaded_data[full_path] = stack  # Preload data here
+                pairs.extend(self.process_stack(full_path, stack))
+                cumulative_slices.append(len(pairs))
+        return pairs, cumulative_slices
+
+    def process_stack(self, filepath, stack):
+        pairs = []
+        if stack.shape[0] >= 5:  # Ensure there are enough slices
+            for i in range(stack.shape[0] - 4):  # Iterate to form groups of 5 adjacent slices
+                input_slices_indices = [i, i+1, i+3, i+4]
+                target_slice_index = i+2
+                pairs.append((filepath, input_slices_indices, target_slice_index))
+        return pairs
+
+    def __len__(self):
+        return self.cumulative_slices[-1]
+
+    def __getitem__(self, index):
+        pair_index = next(i for i, total in enumerate(self.cumulative_slices) if total > index) - 1
+        file_path, input_slice_indices, target_slice_index = self.pairs[pair_index]
+        
+        # Access preloaded data instead of reading from file
+        volume = self.preloaded_data[file_path]
+        input_slices = np.stack([volume[i][..., np.newaxis] for i in input_slice_indices], axis=0)
+        target_slice = volume[target_slice_index][..., np.newaxis]
+
+        if self.transform:
+            input_slices, target_slice = self.transform((input_slices, target_slice))
+
+        return input_slices, target_slice
+
 

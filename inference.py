@@ -9,7 +9,7 @@ import glob
 from torchvision import transforms
 import matplotlib.pyplot as plt
 
-from new_model_3 import *
+from model import *
 from transforms import *
 from utils import *
 from dataset import *
@@ -31,11 +31,11 @@ def main():
     #********************************************************#
 
     # project_dir = os.path.join('Z:\\', 'members', 'Rauscher', 'projects', 'OCM_denoising-n2n_training')
-    project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'OCM_denoising-FastDVDNet')
-    data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'test_data_2')
-    name = 'test-new_pooling-sigmoid'
-    inference_name = 'inference_50'
-    load_epoch = 50
+    project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
+    data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample-unidentified')
+    name = 'good_sample-unidentified-test_1'
+    inference_name = 'inference_20-good_sample-unidentified'
+    load_epoch = 20
 
 
     #********************************************************#
@@ -46,10 +46,6 @@ def main():
     # Make a folder to store the inference
     inference_folder = os.path.join(results_dir, inference_name)
     os.makedirs(inference_folder, exist_ok=True)
-    
-    ## Load image stack for inference
-    filenames = glob.glob(os.path.join(data_dir, "*.TIFF"))
-    print("Following file will be denoised:  ", filenames[0])
 
 
 
@@ -61,15 +57,16 @@ def main():
         print("\nCPU will be used.")
         device = torch.device("cpu")
 
-    min, max = load_min_max_params(data_dir=data_dir)
+    mean, std = load_normalization_params(checkpoints_dir)
     
     inf_transform = transforms.Compose([
-        MinMaxNormalizeVideo(min, max),
+        Normalize(mean, std),
         CropToMultipleOf16Video(),
         ToTensorVideo(),
     ])
 
     inv_inf_transform = transforms.Compose([
+        BackTo01Range(),
         ToNumpyVideo()
     ])
 
@@ -118,7 +115,8 @@ def main():
 
     # Stack and save output images
     output_stack = np.stack(output_images_clipped, axis=0).squeeze(-1)  # Remove channel dimension if single channel
-    tifffile.imwrite(os.path.join(inference_folder, 'output_stack.TIFF'), output_stack)
+    filename = f'output_stack-{name}-{inference_name}.TIFF'
+    tifffile.imwrite(os.path.join(inference_folder, filename), output_stack)
 
     print("Output TIFF stack created successfully.")
 

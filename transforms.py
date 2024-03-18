@@ -856,3 +856,29 @@ class RandomSubsample(object):
     
 
 
+class BackTo01Range(object):
+    """
+    Normalize a tensor to the range [0, 1] based on its own min and max values.
+    """
+
+    def __call__(self, tensor):
+        """
+        Args:
+            tensor: A tensor with any range of values.
+        
+        Returns:
+            A tensor normalized to the range [0, 1].
+        """
+        min_val = tensor.min()
+        max_val = tensor.max()
+        
+        # Avoid division by zero in case the tensor is constant
+        if (max_val - min_val).item() > 0:
+            # Normalize the tensor to [0, 1] based on its dynamic range
+            normalized_tensor = (tensor - min_val) / (max_val - min_val)
+        else:
+            # If the tensor is constant, set it to a default value, e.g., 0, or handle as needed
+            normalized_tensor = tensor.clone().fill_(0)  # Here, setting all values to 0
+
+        return normalized_tensor
+

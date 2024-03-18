@@ -64,9 +64,9 @@ def main():
         # If not running on the server, perhaps use a default data_dir or handle differently
         data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample-unidentified')
         project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
-        name = 'test-2'
+        name = 'good_sample-unidentified-test_1'
         train_continue = 'off'
-        load_epoch = 102
+        load_epoch = 17     
 
 
 
@@ -82,6 +82,7 @@ def main():
 
     data_dict['num_epoch'] = 300
     data_dict['batch_size'] = 8
+    data_dict['lr'] = 1e-4
 
     data_dict['num_freq_disp'] = 5
     data_dict['num_freq_save'] = 1
