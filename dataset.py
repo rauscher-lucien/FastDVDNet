@@ -331,17 +331,23 @@ class N2NVideoDataset2(torch.utils.data.Dataset):
         return self.cumulative_slices[-1]
 
     def __getitem__(self, index):
-        pair_index = next(i for i, total in enumerate(self.cumulative_slices) if total > index) - 1
-        file_path, input_slice_indices, target_slice_index = self.pairs[pair_index]
-        
+        # Find which stack the index falls into
+        stack_index = next(i for i, total in enumerate(self.cumulative_slices) if total > index) - 1
+        # Calculate the local index within that stack's pairs (adjust for the offset)
+        if stack_index == 0:
+            local_index = index
+        else:
+            local_index = index - self.cumulative_slices[stack_index]
+
+        file_path, input_slice_indices, target_slice_index = self.pairs[local_index]
+
         # Access preloaded data instead of reading from file
         volume = self.preloaded_data[file_path]
-        input_slices = np.stack([volume[i][..., np.newaxis] for i in input_slice_indices], axis=0)
+        input_slices = np.stack([volume[i] for i in input_slice_indices], axis=0)[..., np.newaxis]
         target_slice = volume[target_slice_index][..., np.newaxis]
 
         if self.transform:
             input_slices, target_slice = self.transform((input_slices, target_slice))
 
         return input_slices, target_slice
-
 

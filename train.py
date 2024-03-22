@@ -84,7 +84,6 @@ class Trainer:
         ])
 
         transform_inv_train = transforms.Compose([
-            BackTo01Range(),
             ToNumpyVideo()
         ])
 
