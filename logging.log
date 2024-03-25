@@ -33562,3 +33562,53 @@
 2024-03-25 11:16:15 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\functional.py", line 2478, in batch_norm
 2024-03-25 11:16:15 - ERROR - return torch.batch_norm(
 2024-03-25 11:16:15 - ERROR - KeyboardInterrupt
+2024-03-25 13:14:14 - INFO - GPU is not available
+2024-03-25 13:14:14 - INFO - C:\Users\rausc\Documents\EMBL\data\only_two_dataset
+2024-03-25 13:14:14 - INFO - Global mean and std parameters saved to C:\Users\rausc\Documents\EMBL\projects\FastDVDNet\only_two_dataset-test_1\checkpoints
+2024-03-25 13:14:14 - INFO - Execution time: 0.12621259689331055 seconds
+2024-03-25 13:14:14 - INFO - C:\Users\rausc\Documents\EMBL\projects\FastDVDNet\only_two_dataset-test_1\checkpoints
+2024-03-25 13:14:14 - INFO - Loaded 200th network
+2024-03-25 13:14:23 - INFO - TRAIN: EPOCH 201: BATCH 0000/0035: LOSS: 5668.6313
+2024-03-25 13:14:23 - INFO - TRAIN: EPOCH 201: BATCH 0001/0035: LOSS: 5693.4580
+2024-03-25 13:14:24 - INFO - TRAIN: EPOCH 201: BATCH 0002/0035: LOSS: 5546.4912
+2024-03-25 13:14:24 - INFO - TRAIN: EPOCH 201: BATCH 0003/0035: LOSS: 5458.4199
+2024-03-25 13:14:24 - INFO - TRAIN: EPOCH 201: BATCH 0004/0035: LOSS: 5643.9365
+2024-03-25 13:14:25 - INFO - TRAIN: EPOCH 201: BATCH 0005/0035: LOSS: 5639.2080
+2024-03-25 13:14:25 - INFO - TRAIN: EPOCH 201: BATCH 0006/0035: LOSS: 5490.3340
+2024-03-25 13:14:25 - INFO - TRAIN: EPOCH 201: BATCH 0007/0035: LOSS: 5615.4966
+2024-03-25 13:14:26 - INFO - TRAIN: EPOCH 201: BATCH 0008/0035: LOSS: 5464.7505
+2024-03-25 13:14:26 - INFO - TRAIN: EPOCH 201: BATCH 0009/0035: LOSS: 5566.0474
+2024-03-25 13:14:27 - ERROR - Traceback (most recent call last):
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 196, in _run_module_as_main
+2024-03-25 13:14:27 - ERROR - return _run_code(code, main_globals, None,
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 86, in _run_code
+2024-03-25 13:14:27 - ERROR - exec(code, run_globals)
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\__main__.py", line 39, in <module>
+2024-03-25 13:14:27 - ERROR - cli.main()
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 430, in main
+2024-03-25 13:14:27 - ERROR - run()
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy/..\debugpy\server\cli.py", line 284, in run_file
+2024-03-25 13:14:27 - ERROR - runpy.run_path(target, run_name="__main__")
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 321, in run_path
+2024-03-25 13:14:27 - ERROR - return _run_module_code(code, init_globals, run_name,
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 135, in _run_module_code
+2024-03-25 13:14:27 - ERROR - _run_code(code, mod_globals, init_globals,
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\.vscode\extensions\ms-python.debugpy-2024.2.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_runpy.py", line 124, in _run_code
+2024-03-25 13:14:27 - ERROR - exec(code, run_globals)
+2024-03-25 13:14:27 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 114, in <module>
+2024-03-25 13:14:27 - ERROR - main()
+2024-03-25 13:14:27 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\main.py", line 110, in main
+2024-03-25 13:14:27 - ERROR - TRAINER.train()
+2024-03-25 13:14:27 - ERROR -   File "C:\Users\rausc\Documents\EMBL\code\FastDVDNet\train.py", line 152, in train
+2024-03-25 13:14:27 - ERROR - optimizer.step()
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\optim\optimizer.py", line 373, in wrapper
+2024-03-25 13:14:27 - ERROR - out = func(*args, **kwargs)
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\optim\optimizer.py", line 76, in _use_grad
+2024-03-25 13:14:27 - ERROR - ret = func(self, *args, **kwargs)
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\optim\adam.py", line 163, in step
+2024-03-25 13:14:27 - ERROR - adam(
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\optim\adam.py", line 311, in adam
+2024-03-25 13:14:27 - ERROR - func(params,
+2024-03-25 13:14:27 - ERROR -   File "c:\Users\rausc\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\optim\adam.py", line 384, in _single_tensor_adam
+2024-03-25 13:14:27 - ERROR - exp_avg.lerp_(grad, 1 - beta1)
+2024-03-25 13:14:27 - ERROR - KeyboardInterrupt

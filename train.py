@@ -110,7 +110,7 @@ class Trainer:
 
         model = FastDVDnet()
 
-        criterion = nn.MSELoss(reduction='sum')
+        criterion = nn.MSELoss(reduction='sum').to(self.device)
 
         optimizer = torch.optim.Adam(model.parameters(), self.lr)
 
@@ -118,6 +118,8 @@ class Trainer:
         if self.train_continue == 'on':
             print(self.checkpoints_dir)
             model, optimizer, st_epoch = self.load(self.checkpoints_dir, model, self.load_epoch, optimizer)
+
+        model = model.to(self.device)
 
         for epoch in range(st_epoch + 1, self.num_epoch + 1):
 
@@ -132,13 +134,16 @@ class Trainer:
                 # When optimizer = optim.Optimizer(net.parameters()) we only zero the optim's grads
                 optimizer.zero_grad()
 
-                input_img, target_img = [x.squeeze(0).to(self.device) for x in data]
+                input_stack, target_img = [x.squeeze(0).to(self.device) for x in data]
+
+                input_stack = input_stack.to(self.device)
+                target_img = target_img.to(self.device)
 
                 #plot_intensity_line_distribution(input_img, 'input')
 
                 #plot_intensity_line_distribution(target_img, 'target')
 
-                output_img = model(input_img)
+                output_img = model(input_stack)
 
                 #plot_intensity_line_distribution(output_img, 'output')
 
@@ -152,10 +157,10 @@ class Trainer:
 
                 if should(self.num_freq_disp):
                     # Assuming input_img is a tensor with shape [batch_size, num_frames, H, W]
-                    num_frames = input_img.shape[-1]  # Assuming the second dimension represents the number of frames
+                    num_frames = input_stack.shape[-1]  # Assuming the second dimension represents the number of frames
 
                     # Convert tensors to numpy arrays
-                    input_img_np = transform_inv_train(input_img)
+                    input_img_np = transform_inv_train(input_stack)
                     target_img_np = transform_inv_train(target_img)
                     output_img_np = transform_inv_train(output_img)
 
