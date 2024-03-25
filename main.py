@@ -69,7 +69,7 @@ def main():
         project_name = args.project_name 
         train_continue = args.train_continue
         load_epoch = args.load_epoch
-        project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', '4_adj-central_target-0_1_range')
+        project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'FastDVDNet')
 
         print(f"Using data directory: {data_dir}")
         print(f"Project name: {project_name}")
