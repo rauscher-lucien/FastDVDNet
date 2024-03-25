@@ -79,7 +79,7 @@ def main():
         # If not running on the server, perhaps use a default data_dir or handle differently
         data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_two_dataset')
         project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
-        name = 'only_two_dataset-test_1'
+        project_name = 'only_two_dataset-test_1'
         train_continue = 'on'
         load_epoch = 200
 
@@ -87,7 +87,7 @@ def main():
 
     ### things to modify depending on your folder structure
 
-    results_dir, checkpoints_dir = create_result_dir(project_dir, name)
+    results_dir, checkpoints_dir = create_result_dir(project_dir, project_name)
 
     data_dict = {}
 
