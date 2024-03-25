@@ -112,7 +112,7 @@ class Trainer:
 
         criterion = nn.MSELoss(reduction='sum').to(self.device)
 
-        optimizer = torch.optim.Adam(model.parameters(), self.lr)
+        optimizer = torch.optim.Adam(model.parameters(), self.lr).to(self.device)
 
         st_epoch = 0
         if self.train_continue == 'on':
