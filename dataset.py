@@ -350,4 +350,56 @@ class N2NVideoDataset2(torch.utils.data.Dataset):
             input_slices, target_slice = self.transform((input_slices, target_slice))
 
         return input_slices, target_slice
+    
+
+
+class N2NVideoDataset3(torch.utils.data.Dataset):
+    def __init__(self, root_folder_path, transform=None):
+        """
+        Initializes the dataset with paths to files instead of loading all data into memory.
+        Each item is loaded and processed on demand.
+        """
+        self.root_folder_path = root_folder_path
+        self.transform = transform
+        self.pairs = self.list_all_pairs()
+
+    def list_all_pairs(self):
+        pairs = []
+        for subdir, _, files in os.walk(self.root_folder_path):
+            sorted_files = sorted([f for f in files if f.lower().endswith(('.tif', '.tiff'))])
+            for filename in sorted_files:
+                full_path = os.path.join(subdir, filename)
+                stack_info = self.get_stack_info(full_path)
+                pairs.extend(stack_info)
+        return pairs
+
+    def get_stack_info(self, filepath):
+        """
+        Instead of loading the stack, just record the necessary information to load it later.
+        """
+        with tifffile.TiffFile(filepath) as tif:
+            num_frames = len(tif.pages)
+            pairs = []
+            if num_frames >= 5:
+                for i in range(num_frames - 4):
+                    input_slice_indices = [i, i+1, i+3, i+4]
+                    target_slice_index = i+2
+                    pairs.append((filepath, input_slice_indices, target_slice_index))
+        return pairs
+
+    def __len__(self):
+        return len(self.pairs)
+
+    def __getitem__(self, index):
+        file_path, input_slice_indices, target_slice_index = self.pairs[index]
+        stack = tifffile.imread(file_path)
+
+        input_slices = np.stack([stack[i] for i in input_slice_indices], axis=0)[..., np.newaxis]
+        target_slice = stack[target_slice_index][..., np.newaxis]
+
+        if self.transform:
+            input_slices, target_slice = self.transform((input_slices, target_slice))
+
+        return input_slices, target_slice
+
 

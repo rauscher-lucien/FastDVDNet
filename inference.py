@@ -32,10 +32,10 @@ def main():
 
     # project_dir = os.path.join('Z:\\', 'members', 'Rauscher', 'projects', 'OCM_denoising-n2n_training')
     project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
-    data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_three_dataset', 'good_sample-unidentified')
-    name = 'only_two_dataset-test_1'
-    inference_name = 'inference_100-good_sample-unidentified'
-    load_epoch = 100
+    data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample_unidentified')
+    name = 'good_sample-unidentified-test_1'
+    inference_name = 'inference_90-good_sample_unidentified'
+    load_epoch = 90
 
 
     #********************************************************#
