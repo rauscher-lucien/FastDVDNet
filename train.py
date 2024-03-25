@@ -108,7 +108,7 @@ class Trainer:
 
         ### initialize network ###
 
-        model = FastDVDnet()
+        model = FastDVDnet().to(self.device)
 
         criterion = nn.MSELoss(reduction='sum').to(self.device)
 
@@ -119,7 +119,7 @@ class Trainer:
             print(self.checkpoints_dir)
             model, optimizer, st_epoch = self.load(self.checkpoints_dir, model, self.load_epoch, optimizer)
 
-        model = model.to(self.device)
+            model = model.to(self.device)
 
         for epoch in range(st_epoch + 1, self.num_epoch + 1):
 
