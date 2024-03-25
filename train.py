@@ -112,7 +112,7 @@ class Trainer:
 
         criterion = nn.MSELoss(reduction='sum').to(self.device)
 
-        optimizer = torch.optim.Adam(model.parameters(), self.lr).to(self.device)
+        optimizer = torch.optim.Adam(model.parameters(), self.lr)
 
         st_epoch = 0
         if self.train_continue == 'on':
@@ -139,13 +139,7 @@ class Trainer:
                 input_stack = input_stack.to(self.device)
                 target_img = target_img.to(self.device)
 
-                #plot_intensity_line_distribution(input_img, 'input')
-
-                #plot_intensity_line_distribution(target_img, 'target')
-
                 output_img = model(input_stack)
-
-                #plot_intensity_line_distribution(output_img, 'output')
 
                 loss = criterion(output_img, target_img)
                 loss.backward()
