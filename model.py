@@ -17,22 +17,6 @@ class CvBlock(nn.Module):
     def forward(self, x):
         return self.convblock(x)
 
-class InputCvBlock(nn.Module):
-    '''Adjusted to take grayscale images (single channel) as input'''
-    def __init__(self, num_in_frames, out_ch):
-        super(InputCvBlock, self).__init__()
-        self.interm_ch = 30
-        self.convblock = nn.Sequential(
-            nn.Conv2d(num_in_frames, num_in_frames*self.interm_ch, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(num_in_frames*self.interm_ch),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(num_in_frames*self.interm_ch, out_ch, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(out_ch),
-            nn.ReLU(inplace=True)
-        )
-
-    def forward(self, x):
-        return self.convblock(x)
 
 class DownBlock(nn.Module):
     '''Pooling => (Conv2d => BN => ReLU)*2'''
@@ -58,19 +42,6 @@ class UpBlock(nn.Module):
 	def forward(self, x):
 		return self.convblock(x)
 
-class OutputCvBlock(nn.Module):
-	'''Conv2d => BN => ReLU => Conv2d'''
-	def __init__(self, in_ch, out_ch):
-		super(OutputCvBlock, self).__init__()
-		self.convblock = nn.Sequential(
-			nn.Conv2d(in_ch, in_ch, kernel_size=3, padding=1, bias=False),
-			nn.BatchNorm2d(in_ch),
-			nn.ReLU(inplace=True),
-			nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False)
-		)
-
-	def forward(self, x):
-		return self.convblock(x)
 
 class DenBlock(nn.Module):
     """Modified DenBlock to accept 2 input frames for the FastDVDnet model."""
