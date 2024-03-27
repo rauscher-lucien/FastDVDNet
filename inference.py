@@ -70,7 +70,6 @@ def main():
         # Now you can use args.data_dir as the path to your data
         data_dir = args.data_dir
         project_name = args.project_name 
-        train_continue = args.train_continue
         load_epoch = args.load_epoch
         project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'FastDVDNet')
 
