@@ -137,7 +137,9 @@ def main():
 
     model = FastDVDnet().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-    model, optimizer, st_epoch = load(checkpoints_dir, model, load_epoch, optimizer)
+    model, optimizer, _ = load(checkpoints_dir, model, load_epoch, optimizer)
+
+    model = model.to(device)
 
 
     print("starting inference")
