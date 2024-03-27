@@ -135,7 +135,7 @@ def main():
     )
 
 
-    model = FastDVDnet()
+    model = FastDVDnet().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     model, optimizer, st_epoch = load(checkpoints_dir, model, load_epoch, optimizer)
 
