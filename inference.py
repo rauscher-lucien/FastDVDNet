@@ -80,11 +80,11 @@ def main():
         print(f"Load epoch: {load_epoch}")
     else:
         # If not running on the server, perhaps use a default data_dir or handle differently
-        data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_two_dataset')
+        data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_two_dataset_not_similar', 'good_sample_unidentified')
         project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
-        project_name = 'only_two_dataset-test_1'
-        inference_name = 'inference_300-Anemonia_20240321_123052_T0'
-        load_epoch = 200
+        project_name = 'only_two_dataset_not_similar-test_1'
+        inference_name = 'inference_300-good_sample_unidentified'
+        load_epoch = 300
 
     #********************************************************#
 
