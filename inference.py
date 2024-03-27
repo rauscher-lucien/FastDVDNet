@@ -76,7 +76,6 @@ def main():
 
         print(f"Using data directory: {data_dir}")
         print(f"Project name: {project_name}")
-        print(f"Train continue: {train_continue}")
         print(f"Load epoch: {load_epoch}")
     else:
         # If not running on the server, perhaps use a default data_dir or handle differently
