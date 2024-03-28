@@ -189,6 +189,25 @@ class Trainer:
                     loss = criterion(output_img, target_img)
                     val_loss += loss.item()
 
+                    input_img_np = transform_inv_train(input_stack)
+                    target_img_np = transform_inv_train(target_img)
+                    output_img_np = transform_inv_train(output_img)
+
+                    num_frames = input_stack.shape[-1]
+
+                    for j in range(target_img_np.shape[0]):
+                        base_filename = f"sample{j:03d}"
+
+                        for frame_idx in range(num_frames):
+                            input_frame_filename = os.path.join(self.val_results_dir, f"{base_filename}_input_frame{frame_idx}.png")
+                            plt.imsave(input_frame_filename, input_img_np[j, :, :, 0, frame_idx], cmap='gray')
+
+                        target_filename = os.path.join(self.val_results_dir, f"{base_filename}_target.png")
+                        output_filename = os.path.join(self.val_results_dir, f"{base_filename}_output.png")
+
+                        plt.imsave(target_filename, target_img_np[j, :, :, 0], cmap='gray')
+                        plt.imsave(output_filename, output_img_np[j, :, :, 0], cmap='gray')
+
             avg_val_loss = val_loss / len(val_loader)
             self.writer.add_scalar('Loss/val', avg_val_loss, epoch)
             print(f'Validation Loss: {avg_val_loss:.4f}')
