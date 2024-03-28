@@ -53,7 +53,8 @@ def main():
 
         parser = argparse.ArgumentParser(description='Process data directory.')
 
-        parser.add_argument('--data_dir', type=str, help='Path to the data directory')
+        parser.add_argument('--train_data_dir', type=str, help='Path to the train data directory')
+        parser.add_argument('--val_data_dir', type=str, help='Path to the validation data directory')
         parser.add_argument('--project_name', type=str, help='Name of the project')
         parser.add_argument('--train_continue', type=str, default='off', choices=['on', 'off'],
                             help='Flag to continue training: "on" or "off" (default: "off")')
@@ -65,13 +66,15 @@ def main():
         args = parser.parse_args()
 
         # Now you can use args.data_dir as the path to your data
-        data_dir = args.data_dir
+        train_data_dir = args.train_data_dir
+        val_data_dir = args.val_data_dir
         project_name = args.project_name 
         train_continue = args.train_continue
         load_epoch = args.load_epoch
         project_dir = os.path.join('/g', 'prevedel', 'members', 'Rauscher', 'projects', 'FastDVDNet')
 
-        print(f"Using data directory: {data_dir}")
+        print(f"Using train data directory: {train_data_dir}")
+        print(f"Using val data directory: {val_data_dir}")
         print(f"Project name: {project_name}")
         print(f"Train continue: {train_continue}")
         print(f"Load epoch: {load_epoch}")
@@ -85,17 +88,12 @@ def main():
         load_epoch = 1
 
 
-
-    ### things to modify depending on your folder structure
-
-    results_dir, checkpoints_dir = create_result_dir(project_dir, project_name)
-
     data_dict = {}
 
-    data_dict['results_dir'] = results_dir
-    data_dict['checkpoints_dir'] = checkpoints_dir
     data_dict['train_data_dir'] = train_data_dir
     data_dict['val_data_dir'] = val_data_dir
+    data_dict['project_dir'] = project_dir
+    data_dict['project_name'] = project_name
 
     data_dict['num_epoch'] = 300
     data_dict['batch_size'] = 8

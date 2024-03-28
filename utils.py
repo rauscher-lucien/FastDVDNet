@@ -18,6 +18,18 @@ def create_result_dir(project_dir, name='new_results'):
 
     return results_dir, checkpoints_dir
 
+
+def create_train_val_dir(results_dir):
+
+    os.makedirs(results_dir, exist_ok=True)
+    train_dir = os.path.join(results_dir, 'train')
+    os.makedirs(train_dir, exist_ok=True)
+    val_dir = os.path.join(results_dir, 'val')
+    os.makedirs(val_dir, exist_ok=True)
+
+    return train_dir, val_dir
+
+
 def normalize_dataset(dataset):
     all_means = []
     all_stds = []
@@ -345,3 +357,14 @@ def crop_tiff_depth_to_divisible(path, divisor):
                         # Save the cropped TIFF stack
                         tifffile.imwrite(file_path, cropped_images, photometric='minisblack')
                         print(f'Cropped and saved: {file_path}')
+
+
+def get_device():
+    if torch.cuda.is_available():
+        print("GPU is available")
+        device = torch.device("cuda:0")
+    else:
+        print("GPU is not available")
+        device = torch.device("cpu")
+    
+    return device

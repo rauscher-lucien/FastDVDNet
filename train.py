@@ -6,6 +6,8 @@ import time
 import logging
 
 from torchvision import transforms
+from torch.utils.tensorboard import SummaryWriter
+
 
 from utils import *
 from transforms import *
@@ -17,15 +19,13 @@ class Trainer:
 
     def __init__(self, data_dict):
 
-        self.results_dir = data_dict['results_dir']
-
-        self.train_results_dir = os.path.join(self.results_dir, 'train')
-        os.makedirs(self.train_results_dir, exist_ok=True)
-
-        self.checkpoints_dir = data_dict['checkpoints_dir']
-
         self.train_data_dir = data_dict['train_data_dir']
         self.val_data_dir = data_dict['val_data_dir']
+        self.project_dir = data_dict['project_dir']
+        self.project_name = data_dict['project_name']
+
+        self.results_dir, self.checkpoints_dir = create_result_dir(self.project_dir, self.project_name)
+        self.train_results_dir, self.val_results_dir = create_train_val_dir(self.results_dir)
 
         self.num_epoch = data_dict['num_epoch']
         self.batch_size = data_dict['batch_size']
@@ -37,13 +37,10 @@ class Trainer:
         self.train_continue = data_dict['train_continue']
         self.load_epoch = data_dict['load_epoch']
 
-        # check if we have a gpu
-        if torch.cuda.is_available():
-            print("GPU is available")
-            self.device = torch.device("cuda:0")
-        else:
-            print("GPU is not available")
-            self.device = torch.device("cpu")
+        self.device = get_device()
+
+        self.writer = SummaryWriter(self.results_dir + '/tensorboard_logs')
+
 
 
     def save(self, dir_chck, net, optimG, epoch):
@@ -79,12 +76,6 @@ class Trainer:
         print(f"Execution time: {execution_time} seconds")
 
         transform_train = transforms.Compose([
-            Normalize(mean, std),
-            RandomCropVideo(output_size=(64,64)),
-            ToTensorVideo()
-        ])
-
-        transform_val = transforms.Compose([
             Normalize(mean, std),
             RandomCropVideo(output_size=(64,64)),
             ToTensorVideo()
@@ -159,6 +150,7 @@ class Trainer:
                 output_img = model(input_stack)
 
                 loss = criterion(output_img, target_img)
+                self.writer.add_scalar('Loss/train', loss.item(), epoch * num_batch_train + batch)
                 loss.backward()
                 optimizer.step()
 
@@ -198,10 +190,11 @@ class Trainer:
                     val_loss += loss.item()
 
             avg_val_loss = val_loss / len(val_loader)
+            self.writer.add_scalar('Loss/val', avg_val_loss, epoch)
             print(f'Validation Loss: {avg_val_loss:.4f}')
 
 
             if (epoch % self.num_freq_save) == 0:
                 self.save(self.checkpoints_dir, model, optimizer, epoch)
-
-               
+ 
+        self.writer.close()
