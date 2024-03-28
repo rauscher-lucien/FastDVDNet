@@ -130,27 +130,19 @@ class Trainer:
             model = model.to(self.device)
 
         for epoch in range(st_epoch + 1, self.num_epoch + 1):
+            model.train()  # Ensure model is in training mode
+            train_loss = 0.0
 
             for batch, data in enumerate(train_loader, 0):
-
-                def should(freq):
-                    return freq > 0 and (batch % freq == 0 or batch == num_batch_train)
-
-                # Pre-training step
-                model.train()
-
-                # When optimizer = optim.Optimizer(net.parameters()) we only zero the optim's grads
-                optimizer.zero_grad()
+                optimizer.zero_grad()  # Zero the gradients before running the backward pass.
 
                 input_stack, target_img = [x.squeeze(0).to(self.device) for x in data]
-
-                input_stack = input_stack.to(self.device)
-                target_img = target_img.to(self.device)
 
                 output_img = model(input_stack)
 
                 loss = criterion(output_img, target_img)
-                self.writer.add_scalar('Loss/train', loss.item(), epoch * num_batch_train + batch)
+                train_loss += loss.item()  # Accumulate loss
+
                 loss.backward()
                 optimizer.step()
 
@@ -158,26 +150,28 @@ class Trainer:
                              % (epoch, batch, num_batch_train, loss))
                 
 
-                if should(self.num_freq_disp):
+            input_img_np = transform_inv_train(input_stack)
+            target_img_np = transform_inv_train(target_img)
+            output_img_np = transform_inv_train(output_img)
 
-                    input_img_np = transform_inv_train(input_stack)
-                    target_img_np = transform_inv_train(target_img)
-                    output_img_np = transform_inv_train(output_img)
+            num_frames = input_stack.shape[-1]
 
-                    num_frames = input_stack.shape[-1]
+            for j in range(target_img_np.shape[0]):
+                base_filename = f"sample{j:03d}"
 
-                    for j in range(target_img_np.shape[0]):
-                        base_filename = f"sample{j:03d}"
+                for frame_idx in range(num_frames):
+                    input_frame_filename = os.path.join(self.train_results_dir, f"{base_filename}_input_frame{frame_idx}.png")
+                    plt.imsave(input_frame_filename, input_img_np[j, :, :, 0, frame_idx], cmap='gray')
 
-                        for frame_idx in range(num_frames):
-                            input_frame_filename = os.path.join(self.train_results_dir, f"{base_filename}_input_frame{frame_idx}.png")
-                            plt.imsave(input_frame_filename, input_img_np[j, :, :, 0, frame_idx], cmap='gray')
+                target_filename = os.path.join(self.train_results_dir, f"{base_filename}_target.png")
+                output_filename = os.path.join(self.train_results_dir, f"{base_filename}_output.png")
 
-                        target_filename = os.path.join(self.train_results_dir, f"{base_filename}_target.png")
-                        output_filename = os.path.join(self.train_results_dir, f"{base_filename}_output.png")
+                plt.imsave(target_filename, target_img_np[j, :, :, 0], cmap='gray')
+                plt.imsave(output_filename, output_img_np[j, :, :, 0], cmap='gray')
 
-                        plt.imsave(target_filename, target_img_np[j, :, :, 0], cmap='gray')
-                        plt.imsave(output_filename, output_img_np[j, :, :, 0], cmap='gray')
+
+            avg_train_loss = train_loss / len(train_loader)
+            self.writer.add_scalar('Loss/train', avg_train_loss, epoch)
 
 
             model.eval()  # Set model to evaluation mode
@@ -210,8 +204,8 @@ class Trainer:
 
             avg_val_loss = val_loss / len(val_loader)
             self.writer.add_scalar('Loss/val', avg_val_loss, epoch)
-            print(f'Validation Loss: {avg_val_loss:.4f}')
 
+            print(f'Epoch [{epoch}/{self.num_epoch}], Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}')
 
             if (epoch % self.num_freq_save) == 0:
                 self.save(self.checkpoints_dir, model, optimizer, epoch)
