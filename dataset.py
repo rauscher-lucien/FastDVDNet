@@ -290,7 +290,7 @@ class N2NVideoDataset(torch.utils.data.Dataset):
         
 
 
-class N2NVideoDataset2(torch.utils.data.Dataset):
+class DatasetLoadAll(torch.utils.data.Dataset):
     def __init__(self, root_folder_path, transform=None):
         """
         Initializes the dataset with the path to a folder and its subfolders containing TIFF stacks, 

@@ -24,7 +24,8 @@ class Trainer:
 
         self.checkpoints_dir = data_dict['checkpoints_dir']
 
-        self.data_dir = data_dict['data_dir']
+        self.train_data_dir = data_dict['train_data_dir']
+        self.val_data_dir = data_dict['val_data_dir']
 
         self.num_epoch = data_dict['num_epoch']
         self.batch_size = data_dict['batch_size']
@@ -70,14 +71,20 @@ class Trainer:
 
         ### transforms ###
 
-        print(self.data_dir)
+        print(self.train_data_dir)
         start_time = time.time()
-        mean, std = compute_global_mean_and_std(self.data_dir, self.checkpoints_dir)
+        mean, std = compute_global_mean_and_std(self.train_data_dir, self.checkpoints_dir)
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"Execution time: {execution_time} seconds")
 
         transform_train = transforms.Compose([
+            Normalize(mean, std),
+            RandomCropVideo(output_size=(64,64)),
+            ToTensorVideo()
+        ])
+
+        transform_val = transforms.Compose([
             Normalize(mean, std),
             RandomCropVideo(output_size=(64,64)),
             ToTensorVideo()
@@ -91,18 +98,28 @@ class Trainer:
         ### make dataset and loader ###
 
         ## prepare dataset
-        crop_tiff_depth_to_divisible(self.data_dir, self.batch_size)
+        crop_tiff_depth_to_divisible(self.train_data_dir, self.batch_size)
+        crop_tiff_depth_to_divisible(self.val_data_dir, self.batch_size)
 
-        dataset_train = N2NVideoDataset2(root_folder_path=self.data_dir,
+        train_dataset = DatasetLoadAll(root_folder_path=self.train_data_dir,
+                                    transform=transform_train)
+        
+        val_dataset = DatasetLoadAll(root_folder_path=self.val_data_dir,
                                     transform=transform_train)
 
-        loader_train = torch.utils.data.DataLoader(
-            dataset_train,
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=2)
+        
+        val_loader = torch.utils.data.DataLoader(
+            val_dataset,
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=2)
 
-        num_train = len(dataset_train)
+        num_train = len(train_dataset)
         num_batch_train = int((num_train / self.batch_size) + ((num_train % self.batch_size) != 0))
 
 
@@ -123,7 +140,7 @@ class Trainer:
 
         for epoch in range(st_epoch + 1, self.num_epoch + 1):
 
-            for batch, data in enumerate(loader_train, 0):
+            for batch, data in enumerate(train_loader, 0):
 
                 def should(freq):
                     return freq > 0 and (batch % freq == 0 or batch == num_batch_train)
@@ -150,34 +167,39 @@ class Trainer:
                 
 
                 if should(self.num_freq_disp):
-                    # Assuming input_img is a tensor with shape [batch_size, num_frames, H, W]
-                    num_frames = input_stack.shape[-1]  # Assuming the second dimension represents the number of frames
 
-                    # Convert tensors to numpy arrays
                     input_img_np = transform_inv_train(input_stack)
                     target_img_np = transform_inv_train(target_img)
                     output_img_np = transform_inv_train(output_img)
 
-                    for j in range(target_img_np.shape[0]):  # Iterate through each item in the batch
-                        # Define a base filename that includes epoch, batch, and sample index
+                    num_frames = input_stack.shape[-1]
+
+                    for j in range(target_img_np.shape[0]):
                         base_filename = f"sample{j:03d}"
 
-                        # Save each input frame
                         for frame_idx in range(num_frames):
                             input_frame_filename = os.path.join(self.train_results_dir, f"{base_filename}_input_frame{frame_idx}.png")
                             plt.imsave(input_frame_filename, input_img_np[j, :, :, 0, frame_idx], cmap='gray')
 
-                        # Save the target and output images
                         target_filename = os.path.join(self.train_results_dir, f"{base_filename}_target.png")
                         output_filename = os.path.join(self.train_results_dir, f"{base_filename}_output.png")
 
                         plt.imsave(target_filename, target_img_np[j, :, :, 0], cmap='gray')
                         plt.imsave(output_filename, output_img_np[j, :, :, 0], cmap='gray')
 
-                        # Optionally, print or log the file paths to verify
-                        # print(f"Saved input frames to: {input_frame_filename}")
-                        # print(f"Saved target to: {target_filename}")
-                        # print(f"Saved output to: {output_filename}")
+
+            model.eval()  # Set model to evaluation mode
+            val_loss = 0.0
+            with torch.no_grad():  # Disable gradient computation
+                for data in val_loader:
+                    input_stack, target_img = [x.squeeze(0).to(self.device) for x in data]
+                    output_img = model(input_stack)
+                    loss = criterion(output_img, target_img)
+                    val_loss += loss.item()
+
+            avg_val_loss = val_loss / len(val_loader)
+            print(f'Validation Loss: {avg_val_loss:.4f}')
+
 
             if (epoch % self.num_freq_save) == 0:
                 self.save(self.checkpoints_dir, model, optimizer, epoch)

@@ -77,11 +77,12 @@ def main():
         print(f"Load epoch: {load_epoch}")
     else:
         # If not running on the server, perhaps use a default data_dir or handle differently
-        data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_two_dataset')
+        train_data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'only_two_dataset')
+        val_data_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'data', 'big_data_small', 'good_sample_unidentified')
         project_dir = os.path.join('C:\\', 'Users', 'rausc', 'Documents', 'EMBL', 'projects', 'FastDVDNet')
-        project_name = 'only_two_dataset-test_1'
-        train_continue = 'on'
-        load_epoch = 200
+        project_name = 'only_two_dataset-test_2'
+        train_continue = 'off'
+        load_epoch = 1
 
 
 
@@ -93,7 +94,8 @@ def main():
 
     data_dict['results_dir'] = results_dir
     data_dict['checkpoints_dir'] = checkpoints_dir
-    data_dict['data_dir'] = data_dir
+    data_dict['train_data_dir'] = train_data_dir
+    data_dict['val_data_dir'] = val_data_dir
 
     data_dict['num_epoch'] = 300
     data_dict['batch_size'] = 8
